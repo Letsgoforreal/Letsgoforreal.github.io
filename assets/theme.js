@@ -258,13 +258,57 @@
     if (box && !box.checked) { e.preventDefault(); box.closest('.terms')?.classList.add('is-error'); box.focus(); e.stopImmediatePropagation(); }
   });
 
+  const formatINR = (cents) => {
+    const n = (Number(cents) || 0) / 100;
+    return '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' INR';
+  };
+  const skipOrderVariant = (title, variantTitle) => {
+    const v = String(variantTitle || '').trim();
+    if (!v || v === 'Default Title' || v === '100ML') return true;
+    const a = String(title || '').toUpperCase().replace(/\s+/g, '');
+    const b = v.toUpperCase().replace(/\s+/g, '');
+    return a.includes(b);
+  };
+  const orderLine = (qty, title, variantTitle, cents) => {
+    const extra = skipOrderVariant(title, variantTitle) ? '' : ` — ${variantTitle}`;
+    return `${qty} × ${title}${extra} — ${formatINR(cents)}`;
+  };
+  const selectedProductVariant = (page) => {
+    const picker = $('variant-picker', page);
+    const id = $('input[name=id]', page)?.value;
+    if (picker && Array.isArray(picker.variants)) {
+      const sel = picker.selected();
+      return picker.variants.find((x) => x.options && x.options.every((o, i) => o === sel[i]))
+        || picker.variants.find((x) => String(x.id) === String(id))
+        || picker.variants[0];
+    }
+    return null;
+  };
   const orderMessageFrom = (link) => {
     const note = $('textarea[name=note]', link.closest('[data-cart-section]') || document)?.value.trim();
     const qtyInput = link.closest('form')?.querySelector('input[name="quantity"]');
+    const qty = Math.max(1, parseInt(qtyInput?.value, 10) || 1);
+    const page = link.closest('product-page');
+    if (page) {
+      const title = ($('product-form', page)?.dataset.title || $('h1, .product__title', page)?.textContent || '').trim();
+      const variant = selectedProductVariant(page);
+      const vTitle = variant ? (variant.title || variant.option1 || (variant.options && variant.options[0]) || '') : '';
+      const unit = Number((variant && variant.price) || link.dataset.orderUnitPrice || 0);
+      if (title && unit) {
+        let message = `Hi, I want to place an order for:\n${orderLine(qty, title, vTitle, unit * qty)}\nOrder total: ${formatINR(unit * qty)}`;
+        if (note) message += `\nNote: ${note}`;
+        return message;
+      }
+    }
     let message = (link.getAttribute('data-whatsapp-message') || link.getAttribute('data-instagram-message') || '').replace(/\\n/g, '\n').trim();
     if (link.dataset.whatsappProduct && qtyInput) {
-      const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
       message = message.replace(/^\d+ × /m, `${qty} × `);
+      const unitPrice = Number(link.dataset.orderUnitPrice || 0);
+      if (unitPrice) {
+        const currency = formatINR(unitPrice * qty);
+        message = message.replace(/(— )₹[\d,]+\.\d{2}(?: INR)?$/m, `$1${currency}`);
+        message = message.replace(/^Order total: .*$/m, `Order total: ${currency}`);
+      }
     }
     if (note && message && !/\nNote:/i.test(message)) message += `\nNote: ${note}`;
     return message || 'Hi, I want to place an order.';
@@ -417,8 +461,11 @@
         const belowOpen = below && this.classList.contains('is-nav-below') && getComputedStyle(below).display !== 'none';
         const h = (barEl ? barEl.offsetHeight : 0) + (belowOpen ? below.offsetHeight : 0);
         const r = document.documentElement.style;
+        const ann = document.querySelector('.announcement');
+        const ah = ann ? ann.offsetHeight : 0;
+        r.setProperty('--ann-sticky-h', ah + 'px');
         r.setProperty('--header-live-h', h + 'px');
-        r.setProperty('--header-sticky-h', this.sticky ? h + 'px' : '0px');
+        r.setProperty('--header-sticky-h', ((this.sticky ? h : 0) + ah) + 'px');
       };
       /* inline menu falls back to a centred row below the logo when it doesn't fit */
       const inline = $('[data-inline-nav]', this);

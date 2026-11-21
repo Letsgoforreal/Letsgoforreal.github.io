@@ -4,15 +4,33 @@ window.DUVETE_STATIC = true;
   const KEY = 'duvete-cart-v1';
   const IG = 'duveteworld';
   const WA = '917000097084';
-  const money = (cents) => '₹' + ((Number(cents) || 0) / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const ROOT = (window.Shopify && Shopify.routes && Shopify.routes.root)
+    || (window.theme && theme.routes && theme.routes.root)
+    || '/';
+  const rootPath = '/' + ROOT.replace(/^\/+|\/+$/g, '');
+  const withRoot = (value = '') => {
+    const raw = String(value || '');
+    if (!raw.startsWith('/') || rootPath === '/') return raw;
+    return raw === rootPath || raw.startsWith(rootPath + '/') ? raw : rootPath + raw;
+  };
+  const money = (cents) => '₹' + ((Number(cents) || 0) / 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' INR';
   const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
   const nativeFetch = window.fetch.bind(window);
   let catalog = { products: [], pages: [] };
   const variants = new Map();
 
-  const catalogReady = nativeFetch('/catalog.json').then((r) => r.json()).then((c) => {
+  const catalogReady = nativeFetch(withRoot('/catalog.json')).then((r) => r.json()).then((c) => {
     catalog = c;
-    (c.products || []).forEach((p) => (p.variants || []).forEach((v) => variants.set(String(v.id), { product: p, variant: v })));
+    (c.products || []).forEach((p) => {
+      p.url = withRoot(p.url);
+      p.image = withRoot(p.image);
+      (p.variants || []).forEach((v) => {
+        v.url = withRoot(v.url);
+        v.image = withRoot(v.image);
+        variants.set(String(v.id), { product: p, variant: v });
+      });
+    });
+    (c.pages || []).forEach((p) => { p.url = withRoot(p.url); });
   }).catch(() => {});
 
   const loadCart = () => {
@@ -60,7 +78,7 @@ window.DUVETE_STATIC = true;
 
   const orderLines = (items) => items.map((i) => {
     const extra = skipVariant(i.product_title, i.variant_title) ? '' : ` — ${i.variant_title}`;
-    return `${i.quantity} × ${i.product_title}${extra}`;
+    return `${i.quantity} × ${i.product_title}${extra} — ${money(i.final_line_price)}`;
   }).join('\n');
 
   const orderText = (cart) => {
@@ -79,10 +97,11 @@ window.DUVETE_STATIC = true;
   };
 
   const orderButtons = (cart, termsId) => {
-    const msg = JSON.stringify(orderText(cart));
+    const message = orderText(cart);
+    const msg = JSON.stringify(message);
     const terms = termsId ? ` data-requires-terms="${termsId}"` : '';
     return `<div class="order-handoff">
-      <a href="https://wa.me/${WA}" class="btn btn--full" data-whatsapp-checkout data-whatsapp-number="${WA}" data-whatsapp-message=${msg}${terms} target="_blank" rel="noopener">${ICO.wa}Order on WhatsApp</a>
+      <a href="https://wa.me/${WA}?text=${encodeURIComponent(message)}" class="btn btn--full" data-whatsapp-checkout data-whatsapp-number="${WA}" data-whatsapp-message=${msg}${terms} target="_blank" rel="noopener">${ICO.wa}Order on WhatsApp</a>
       <a href="https://ig.me/m/${IG}" class="btn btn--full btn--instagram-order" data-instagram-checkout data-instagram-handle="${IG}" data-instagram-message=${msg}${terms} target="_blank" rel="noopener">${ICO.ig}Order on Instagram</a>
     </div>`;
   };
@@ -121,7 +140,7 @@ window.DUVETE_STATIC = true;
            <form action="/cart" method="post" id="cart-drawer-form" class="cart-drawer__form">${orderButtons(cart, 'cart-drawer-terms')}</form>
          </div>`
       : `<div class="drawer__header"><p class="drawer__title">Bag (0)</p><button type="button" class="icon-button" data-close aria-label="Close">×</button></div>
-         <div class="drawer__body cart-empty"><p class="h3 cart-empty__heading">Your cart is empty</p><a class="btn" href="/collections/shop-all">Shop All</a></div>`;
+         <div class="drawer__body cart-empty"><p class="h3 cart-empty__heading">Your cart is empty</p><a class="btn" href="${withRoot('/collections/shop-all')}">Shop All</a></div>`;
     return `<div data-cart-section="${esc(id)}"><span hidden data-item-count="${o.item_count}"></span>${inner}</div>`;
   };
 
@@ -139,7 +158,7 @@ window.DUVETE_STATIC = true;
              </form>
            </aside>
          </div>`
-      : `<div class="empty-state cart-empty"><h1 class="cart-empty__title">Your cart is empty</h1><a class="btn" href="/collections/shop-all">Shop All</a></div>`;
+      : `<div class="empty-state cart-empty"><h1 class="cart-empty__title">Your cart is empty</h1><a class="btn" href="${withRoot('/collections/shop-all')}">Shop All</a></div>`;
     return `<div data-cart-section="${esc(id)}"><span hidden data-item-count="${o.item_count}"></span>${inner}</div>`;
   };
 
@@ -206,7 +225,8 @@ window.DUVETE_STATIC = true;
   window.fetch = async function (input, init) {
     const u = pathOf(input);
     if (u.origin !== location.origin) return nativeFetch(input, init);
-    const p = u.pathname.replace(/\/+$/, '') || '/';
+    let p = u.pathname.replace(/\/+$/, '') || '/';
+    if (rootPath !== '/' && (p === rootPath || p.startsWith(rootPath + '/'))) p = p.slice(rootPath.length) || '/';
     const method = String((init && init.method) || (typeof input !== 'string' && input.method) || 'GET').toUpperCase();
 
     await catalogReady;
