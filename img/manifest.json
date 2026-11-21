@@ -1,0 +1,194 @@
+{
+  "source": "Owner WhatsApp export + public Shopify Files CDN (duvete.com/cdn/shop/files), cross-checked against owner-supplied Shopify admin PDFs/screenshots on 2026-11-19",
+  "policy": "Only evidence-backed mappings are included. Original chat, credentials, licensed theme export, and ambiguous media stay outside git.",
+  "processing": "JPEG derivatives, longest edge 1600 px, quality 82; originals remain in the owner-supplied export.",
+  "products": {
+    "11-11-overview": [
+      "IMG_3939.png",
+      "IMG_3936.png",
+      "IMG_3934.png"
+    ],
+    "444-overview": [
+      "IMG_3931.png"
+    ],
+    "666-overview": [
+      "IMG_3937.png"
+    ],
+    "777-overview": [
+      "IMG_3938.png"
+    ],
+    "999": [
+      "IMG_3930.png"
+    ],
+    "aura": [
+      "IMG_3935.png"
+    ],
+    "demon": [
+      "IMG_3929.png"
+    ],
+    "velvet": [
+      "IMG_3932.png"
+    ],
+    "discovery-set": [
+      "discovery set/SET A.png",
+      "discovery set/SET B.png",
+      "discovery set/SET C.png"
+    ],
+    "weekday-3-luxury-30s": [
+      "weekday set/SET A.png",
+      "weekday set/SET B.png",
+      "weekday set/SET C.png"
+    ],
+    "weekend-3-luxury-30s": [
+      "weekend set/SET A.png",
+      "weekend set/SET B.png",
+      "weekend set/SET C.png"
+    ]
+  },
+  "theme_refs": {
+    "IMG_1167.png": "logo",
+    "IMG_2934.jpg": "homepage/Instagram tile",
+    "IMG_3661.jpg": "homepage story image",
+    "IMG_3711.jpg": "homepage/Instagram tile",
+    "IMG_3930.png": "homepage service image",
+    "IMG_3931.png": "homepage 444 card",
+    "IMG_3970.png": "full-line banner",
+    "IMG_3971.png": "11:11 hero",
+    "IMG_2964.jpg": "homepage/Instagram tile",
+    "IMG_3270_53f8ba4d-38c4-4f32-8bbe-6044581df9c6.jpg": "homepage/Instagram tile",
+    "StartupVideo-poster.jpg": "homepage hero poster from StartupVideo.mov"
+  },
+  "unresolved": [
+    "Variant-level media association and official media order still need a Products GraphQL/CSV export.",
+    "The title-case PNG files in the owner dump are full Shopify Admin screenshots and are evidence only, not product-media binaries.",
+    "flax.png and some video/MOV assets were not reachable on the public CDN path.",
+    "Live storefront HTML remains HTTP 423; only /cdn/shop/files/* assets were recoverable without Admin API."
+  ],
+  "theme_shop_image_aliases": {
+    "IMG_1167.png": "IMG_1167.png",
+    "IMG_2934.jpg": "IMG_2934.jpg",
+    "IMG_3661.jpg": "IMG_3661.jpg",
+    "IMG_3711.jpg": "IMG_3711.jpg",
+    "IMG_3930.png": "IMG_3930.png",
+    "IMG_3931.png": "IMG_3931.png",
+    "IMG_3971.png": "IMG_3971.png",
+    "IMG_3970.png": "IMG_3970.png",
+    "666_new.jpg": "666_new.jpg",
+    "777_new.png": "777_new.png",
+    "IMG_3934_1.png": "IMG_3934_1.png",
+    "SETC.png": "SETC.png",
+    "SETC_b45682d9-f500-4e49-aec7-a90bc17ab172.png": "SETC_b45682d9-f500-4e49-aec7-a90bc17ab172.png",
+    "IMG_3270_53f8ba4d-38c4-4f32-8bbe-6044581df9c6.jpg": "IMG_3270_53f8ba4d-38c4-4f32-8bbe-6044581df9c6.jpg",
+    "IMG_2964.jpg": "IMG_2964.jpg",
+    "lily_of_the_valley.png": "lily_of_the_valley.png",
+    "Opoponax.png": "Opoponax.png",
+    "alpha.png": "alpha.png",
+    "red_berries.png": "red_berries.png",
+    "Black_Red_Bow_Premium_Gift_Certificate.png": "Black_Red_Bow_Premium_Gift_Certificate.png",
+    "Green_notes.png": "Green_notes.png",
+    "black_cardamom.png": "black_cardamom.png",
+    "Oakmoss.png": "Oakmoss.png",
+    "4.gif": "4.gif",
+    "Woody_Notes.png": "Woody_Notes.png",
+    "666.png": "666.png",
+    "V7400999.jpg": "V7400999.jpg",
+    "wavy.png": "wavy.png",
+    "praline.png": "praline.png",
+    "Kulfi.png": "Kulfi.png",
+    "logo_full_text.png": "logo_full_text.png",
+    "oudwood.png": "oudwood.png",
+    "sage.png": "sage.png",
+    "EstelleModel2.jpg": "EstelleModel2.jpg",
+    "trio_2.jpg": "trio_2.jpg",
+    "Suede.png": "Suede.png",
+    "777.png": "777.png",
+    "aura.png": "aura.png",
+    "belle.png": "belle.png",
+    "pink_pepper.png": "pink_pepper.png",
+    "Bitter_Almond.png": "Bitter_Almond.png",
+    "IMG_4030.gif": "IMG_4030.gif",
+    "V7401269.jpg": "V7401269.jpg",
+    "444.png": "444.png",
+    "369.png": "369.png",
+    "IMG_4029.gif": "IMG_4029.gif",
+    "tolu_balsam.png": "tolu_balsam.png",
+    "charme.png": "charme.png",
+    "charlie.png": "charlie.png",
+    "V7401062.jpg": "V7401062.jpg",
+    "demon.png": "demon.png",
+    "white_musk.png": "white_musk.png",
+    "velvet.png": "velvet.png",
+    "peony.png": "peony.png",
+    "b334cd7f-58a7-48a6-b06c-4f84d1c74665.jpg": "b334cd7f-58a7-48a6-b06c-4f84d1c74665.jpg",
+    "IMG_5085.png": "IMG_5085.png",
+    "3.gif": "3.gif",
+    "estelle.png": "estelle.png",
+    "888.png": "888.png",
+    "Alpha_mobile_Banner_28ee83db-e3b9-48e4-876b-52fc9a487e12.jpg": "Alpha_mobile_Banner_28ee83db-e3b9-48e4-876b-52fc9a487e12.jpg",
+    "IMG_1384.heic": "IMG_1384.heic",
+    "V7400968.jpg": "V7400968.jpg",
+    "IMG_3744.heic": "IMG_3744.heic",
+    "V7401095.jpg": "V7401095.jpg",
+    "Loyalty.webp": "Loyalty.webp",
+    "999.png": "999.png",
+    "clary_sage.png": "clary_sage.png",
+    "Cinnamon.png": "Cinnamon.png",
+    "IMG_5086.png": "IMG_5086.png",
+    "IMG_4302.png": "IMG_4302.png",
+    "black_amber.png": "black_amber.png",
+    "vanilla_orchid.png": "vanilla_orchid.png",
+    "StartupVideo-poster.jpg": "StartupVideo-poster.jpg"
+  },
+  "cdn_products": {
+    "11-11-overview": [
+      "11-11-bottle-1"
+    ],
+    "aura": [
+      "aura-1"
+    ],
+    "demon": [
+      "demon-1"
+    ],
+    "velvet": [
+      "velvet-1"
+    ],
+    "444-overview": [
+      "444-overview-1"
+    ],
+    "alpha": [
+      "alpha-1",
+      "alpha-2"
+    ],
+    "belle": [
+      "belle-1"
+    ],
+    "369-overview": [
+      "369-1"
+    ],
+    "666-overview": [
+      "666-1"
+    ],
+    "777-overview": [
+      "777-1"
+    ],
+    "999": [
+      "999-1"
+    ],
+    "charlie": [
+      "charlie-1"
+    ],
+    "charme": [
+      "charme-1"
+    ],
+    "estelle": [
+      "estelle-1",
+      "estelle-2"
+    ],
+    "wavy": [
+      "wavy-1"
+    ],
+    "888-overview": [
+      "888-1"
+    ]
+  }
+}
