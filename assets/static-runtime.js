@@ -81,10 +81,17 @@ window.DUVETE_STATIC = true;
     return `${i.quantity} × ${i.product_title}${extra} — ${money(i.final_line_price)}`;
   }).join('\n');
 
+  const offerForQty = (qty) => (qty >= 2 ? { code: 'DW15', pct: 15 } : { code: 'DW10', pct: 10 });
   const orderText = (cart) => {
     const o = cartObj(cart);
     if (!o.items.length) return 'Hi, I want to place an order.';
-    let msg = `Hi, I want to place an order for:\n${orderLines(o.items)}\nOrder total: ${money(o.total_price)}`;
+    const offer = offerForQty(o.item_count);
+    const off = Math.round(o.total_price * offer.pct / 100);
+    const total = Math.max(0, o.total_price - off);
+    let msg = `Hi, I want to place an order for:\n${orderLines(o.items)}`;
+    msg += `\nDiscount: ${offer.pct}% off with code ${offer.code} (−${money(off)})`;
+    msg += `\nShipping: FREE`;
+    msg += `\nOrder total: ${money(total)}`;
     if (o.note) msg += `\nNote: ${o.note}`;
     return msg;
   };

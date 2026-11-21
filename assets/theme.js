@@ -262,6 +262,19 @@
     const n = (Number(cents) || 0) / 100;
     return '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' INR';
   };
+  const offerForQty = (qty) => (qty >= 2 ? { code: 'DW15', pct: 15 } : { code: 'DW10', pct: 10 });
+  const withLiveOffers = (lines, subtotalCents, qty, note) => {
+    const offer = offerForQty(qty);
+    const subtotal = Number(subtotalCents) || 0;
+    const off = Math.round(subtotal * offer.pct / 100);
+    const total = Math.max(0, subtotal - off);
+    let message = `Hi, I want to place an order for:\n${lines}`;
+    message += `\nDiscount: ${offer.pct}% off with code ${offer.code} (−${formatINR(off)})`;
+    message += `\nShipping: FREE`;
+    message += `\nOrder total: ${formatINR(total)}`;
+    if (note) message += `\nNote: ${note}`;
+    return message;
+  };
   const skipOrderVariant = (title, variantTitle) => {
     const v = String(variantTitle || '').trim();
     if (!v || v === 'Default Title' || v === '100ML') return true;
@@ -295,9 +308,7 @@
       const vTitle = variant ? (variant.title || variant.option1 || (variant.options && variant.options[0]) || '') : '';
       const unit = Number((variant && variant.price) || link.dataset.orderUnitPrice || 0);
       if (title && unit) {
-        let message = `Hi, I want to place an order for:\n${orderLine(qty, title, vTitle, unit * qty)}\nOrder total: ${formatINR(unit * qty)}`;
-        if (note) message += `\nNote: ${note}`;
-        return message;
+        return withLiveOffers(orderLine(qty, title, vTitle, unit * qty), unit * qty, qty, note);
       }
     }
     let message = (link.getAttribute('data-whatsapp-message') || link.getAttribute('data-instagram-message') || '').replace(/\\n/g, '\n').trim();
@@ -461,11 +472,8 @@
         const belowOpen = below && this.classList.contains('is-nav-below') && getComputedStyle(below).display !== 'none';
         const h = (barEl ? barEl.offsetHeight : 0) + (belowOpen ? below.offsetHeight : 0);
         const r = document.documentElement.style;
-        const ann = document.querySelector('.announcement');
-        const ah = ann ? ann.offsetHeight : 0;
-        r.setProperty('--ann-sticky-h', ah + 'px');
         r.setProperty('--header-live-h', h + 'px');
-        r.setProperty('--header-sticky-h', ((this.sticky ? h : 0) + ah) + 'px');
+        r.setProperty('--header-sticky-h', this.sticky ? h + 'px' : '0px');
       };
       /* inline menu falls back to a centred row below the logo when it doesn't fit */
       const inline = $('[data-inline-nav]', this);
